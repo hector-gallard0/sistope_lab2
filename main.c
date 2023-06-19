@@ -8,26 +8,16 @@
 // Descripción: Primero se abren los archivos de entrada y salida, luego se lee el archivo de entrada determinando linea a linea si es expresión regular esto, a su vez, leyendo cada caracter. Con cada lectura de linea se actualizan los contadores-
 // de expresiones regulares, no regulares y de lineas leidas.
 int main(int argc, char *argv[]) {
-    FILE *archivo_entrada = NULL, *archivo_salida = NULL;
-    int n, c, b = 0;
-
-    if(abrirArchivos(&archivo_entrada, &archivo_salida, argc, argv, &n, &c, &b) == 0){
+    if(verificarArchivos(argc, argv) == 0){
         return 0;
     }
-    else if(archivo_entrada == NULL || archivo_salida == NULL){
-        printf("Uno de los archivos no se pudo abrir\n\n");
-        return 0;
-    }    
 
     int pid = fork();
 
     if(pid == 0){
-        printf("hijo");
-    }else{
+        execv("./broker", argv);
+    }else{       
         printf("padre");
     }
-
-    fclose(archivo_entrada);
-    fclose(archivo_salida);
     return 0;
 }
