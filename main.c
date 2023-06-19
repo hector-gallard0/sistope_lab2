@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "funciones.h"
 
 // Entradas: Número de argumentos (2) y argumentos (-i archivo de entrada, -o salida y -b si se imprime).
@@ -15,9 +16,16 @@ int main(int argc, char *argv[]) {
     }
     else if(archivo_entrada == NULL || archivo_salida == NULL){
         printf("Uno de los archivos no se pudo abrir\n\n");
+        return 0;
     }    
 
-    printf("%d, %d, %d", n, c, b);
+    int pid = fork();
+
+    if(pid == 0){
+        printf("hijo");
+    }else{
+        printf("padre");
+    }
 
     fclose(archivo_entrada);
     fclose(archivo_salida);
