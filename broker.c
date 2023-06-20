@@ -30,21 +30,41 @@ int main(int argc, char *argv[]){
         }
     }
 
-    //padre
-    for(int i = 0; i < n; i++){
-        close(fd[i][0]);    
+    char linea[256];    
+    int contador_lineas = 0, i = 0;
+    while (1) {
+        //Si llega al final, envía FIN para que los workers finalicen.
+        if (fgets(linea, sizeof(linea), archivo_entrada) == NULL) {         
+            for(int i = 0; i < n; i++){
+                close(fd[i][0]);             
+                char buffer2[5];
+                sprintf(buffer2, "FIN\n");
+                write(fd[i][1], buffer2, strlen(buffer2));
+            }    
+            //Terminar el bucle si no se lee ninguna entrada.
+            break;
+        }        
 
-        char buffer1[100];
-        sprintf(buffer1, "Mensaje del padre\n"); 
-        write(fd[i][1], buffer1, strlen(buffer1));       
-        
-        // sleep(1);
+        //Para la última linea se agrega \n.
+        if(linea[strlen(linea) - 1] != '\n'){
+            strcat(linea, "\n");
+        }
 
-        char buffer2[100];
-        sprintf(buffer2, "FIN\n"); 
-        write(fd[i][1], buffer2, strlen(buffer2));   
-        
-        close(fd[i][1]);
+        //Se escriben la linea leida del archivo por el pipe para enviarlas a cada worker.
+        if(contador_lineas < c){
+            close(fd[i][0]);           
+            write(fd[i][1], linea, strlen(linea));                                                               
+        }else{
+            i++;
+            contador_lineas = 0;
+            //si se pasa el último worker, se vuelve al inicial
+            if(i == n){
+                i = 0;
+            }
+            close(fd[i][0]);           
+            write(fd[i][1], linea, strlen(linea));                                                               
+        }
+        contador_lineas++;        
     }
     
     pid_t wpid;

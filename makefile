@@ -14,8 +14,11 @@ broker: broker.c fbroker.o
 fbroker.o: fbroker.c
 	gcc -c $(FLAGS) fbroker.c
 
-worker: worker.c
-	gcc $(FLAGS) -o worker worker.c
+worker: worker.c fworker.o
+	gcc $(FLAGS) -o worker worker.c fworker.o
+
+fworker.o: fworker.c
+	gcc -c $(FLAGS) fworker.c
 
 clear:
 	rm -f *.o main
