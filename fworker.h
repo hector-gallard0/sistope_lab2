@@ -1,4 +1,24 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node {
+    char* data;
+    struct Node* next;
+} Node;
+
+typedef struct LinkedList {
+    Node* head;
+    Node* tail;
+} LinkedList;
+
+LinkedList* createLinkedList();
+
+void append(LinkedList* list, const char* data);
+
+void printLinkedList(LinkedList* list);
+
+void freeLinkedList(LinkedList* list);
 
 // Entradas: Estado y letra leida.
 // Salidas: No hay. 
