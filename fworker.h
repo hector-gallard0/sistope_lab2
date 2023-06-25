@@ -4,15 +4,20 @@
 
 typedef struct Node {
     char* data;
-    struct Node* next;
+    struct Node* next;    
 } Node;
 
 typedef struct LinkedList {
     Node* head;
     Node* tail;
+    int size;
 } LinkedList;
 
 LinkedList* createLinkedList();
+
+int getSize(LinkedList* list);
+
+char* get(LinkedList* list, int position);
 
 void append(LinkedList* list, const char* data);
 

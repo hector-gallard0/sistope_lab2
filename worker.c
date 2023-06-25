@@ -15,7 +15,7 @@ int main(){
             break; // Terminar el bucle si no se lee ninguna entrada
         }
 
-        if (strcmp(linea, "FIN\n") == 0) {        	
+        if (strcmp(linea, "FIN\n") == 0) {  	        
             break;
         }
         
@@ -24,24 +24,35 @@ int main(){
             caracter = linea[i];
             reconocedor(&estado, caracter);            
         }        
-        // printf("%d / %d / %s", estado, getpid(), linea);
+
+        
 
        	char resultado[256] = "";
        	strcat(resultado, linea);    
        	resultado[strlen(resultado) - 1] = '\0';
        	if(estado == 4){
-       		strcat(resultado, " SI");       
+       		strcat(resultado, " SI\n");       
        	}else{
-       		strcat(resultado, " NO");
+       		strcat(resultado, " NO\n");
        	}
 
-        append(resultados, resultado);
-        
+        append(resultados, resultado);        
+	}	
+
+	// printf("%d\n", getpid());
+	// printf("----------------------------------------------------------\n");
+	if(resultados->size > 0){	
+		for(int i = 0; i < resultados->size; i++){			
+			char buffer[256];
+			sprintf(buffer, "%s", get(resultados, i)); 
+			write(STDOUT_FILENO, buffer, sizeof(buffer));			
+		}	
 	}
 
-	printLinkedList(resultados);
-	//aca hacer write de cada elemento en la linked list
-
+	char buffer[256];
+	sprintf(buffer, "Worker %d ha procesado %d lineas.\n", getpid(), resultados->size);
+	// printf("%d\n", getpid());
+	write(STDOUT_FILENO, buffer, sizeof(buffer));			
 
 	freeLinkedList(resultados);
 	return 0;
